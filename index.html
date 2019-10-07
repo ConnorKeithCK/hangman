@@ -7,11 +7,21 @@
     <link rel="stylesheet" href="style.css">
     <title>Hangman</title>
 </head>
-<body>
-    <h1>Select your difficulty</h1>
+<body class = "game">
+    <h1 id = "difficulty">Select your difficulty</h1>
     <button id="easy">Easy (3-5 letters)</button>
     <button id = "medium">Medium (6-9 letters)</button>
     <button id = "hard">Hard (10-15 letters)</button>
+
+    <canvas id = "gamePanel" class = "hide">
+
+    </canvas>
+    <div class = "word">
+
+    </div>
+    <div class = "letters">
+
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
