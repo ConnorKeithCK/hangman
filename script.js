@@ -9,22 +9,14 @@ var word;
 easyBtn.addEventListener("click", function(clickEvent) {
     setupCanvas();
     hideButtons();
-    retrieveWord();
     canvas.className = "";;
     difficulty.innerText = "You've selected EASY";
-    console.log(word);
-    drawHead();
-    drawBody();
-    drawLeftArm();
-    drawRightArm();
-    drawLeftLeg();
-    drawRightLeg();
+
 })
 
 mediumBtn.addEventListener("click", function(clickEvent) {
     setupCanvas(); 
     hideButtons();
-    retrieveWord();
     canvas.className = "";
     difficulty.innerText = "You've selected MEDIUM";
 })
@@ -32,7 +24,6 @@ mediumBtn.addEventListener("click", function(clickEvent) {
 hardBtn.addEventListener("click", function(clickEvent) {   
     setupCanvas(); 
     hideButtons();
-    retrieveWord();
     canvas.className = "";
     difficulty.innerText = "You've selected HARD";
 })
@@ -41,17 +32,6 @@ function hideButtons() {
     easyBtn.className = "hide";
     mediumBtn.className = "hide";
     hardBtn.className = "hide";
-}
-
-function retrieveWord() {
-    var wordRequest = new XMLHttpRequest();
-    wordRequest.open('GET', "https://hangman-api.lively.software");
-    wordRequest.onload = function(wordLoad) {
-        word = JSON.parse(wordRequest.responseText);
-        console.log(word.word);
-    };
-    wordRequest.send();
-   // return word;
 }
 
 function setupCanvas() {
@@ -104,4 +84,15 @@ function drawRightLeg() {
     c.moveTo(250, 350);
     c.lineTo(325, 425);
     c.stroke();
+}
+
+function play() {
+    var wordRequest = new XMLHttpRequest();
+    wordRequest.open('GET', "https://hangman-api.lively.software");
+    wordRequest.onload = function(wordLoad) {
+        word = JSON.parse(wordRequest.responseText);
+
+    };
+    wordRequest.send();
+    console.log(word);
 }
