@@ -13,6 +13,12 @@ easyBtn.addEventListener("click", function(clickEvent) {
     canvas.className = "";;
     difficulty.innerText = "You've selected EASY";
     console.log(word);
+    drawHead();
+    drawBody();
+    drawLeftArm();
+    drawRightArm();
+    drawLeftLeg();
+    drawRightLeg();
 })
 
 mediumBtn.addEventListener("click", function(clickEvent) {
@@ -51,4 +57,51 @@ function retrieveWord() {
 function setupCanvas() {
     canvas.width = 500;
     canvas.height = 500;
+    c.beginPath();
+    c.moveTo(250, 0);
+    c.lineTo(250, 100);
+    c.strokeStyle = "brown";
+    c.stroke();
+}
+
+function drawHead() {
+    c.strokeStyle = "black";
+    c.beginPath();
+    c.arc(250, 150, 50, 0, Math.PI * 2, false);
+    c.stroke();
+}
+
+function drawBody() {
+    c.beginPath();
+    c.moveTo(250, 200);
+    c.lineTo(250, 350);
+    c.stroke();
+}
+
+function drawLeftArm() {
+    c.beginPath();
+    c.moveTo(250, 275);
+    c.lineTo(175, 235);
+    c.stroke();
+}
+
+function drawRightArm() {
+    c.beginPath();
+    c.moveTo(250, 275);
+    c.lineTo(325, 235);
+    c.stroke();
+}
+
+function drawLeftLeg() {
+    c.beginPath();
+    c.moveTo(250, 350);
+    c.lineTo(175, 425);
+    c.stroke();
+}
+
+function drawRightLeg() {
+    c.beginPath();
+    c.moveTo(250, 350);
+    c.lineTo(325, 425);
+    c.stroke();
 }
