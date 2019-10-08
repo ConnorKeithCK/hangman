@@ -11,7 +11,12 @@ easyBtn.addEventListener("click", function(clickEvent) {
     hideButtons();
     canvas.className = "";;
     difficulty.innerText = "You've selected EASY";
-
+    drawHead();
+    drawBody();
+    drawLeftArm();
+    drawRightArm();
+    drawRightLeg();
+    drawLeftLeg();
 })
 
 mediumBtn.addEventListener("click", function(clickEvent) {
@@ -89,10 +94,13 @@ function drawRightLeg() {
 function play() {
     var wordRequest = new XMLHttpRequest();
     wordRequest.open('GET', "https://hangman-api.lively.software");
-    wordRequest.onload = function(wordLoad) {
-        word = JSON.parse(wordRequest.responseText);
-
-    };
+    wordRequest.onreadystatechange = function() {
+        if (wordRequest.readyState == 4 && wordRequest.status == 200) {
+            word = JSON.parse(wordRequest)
+        }
+    }
     wordRequest.send();
     console.log(word);
+
 }
+
