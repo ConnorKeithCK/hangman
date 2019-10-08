@@ -4,6 +4,7 @@ var mediumBtn = document.getElementById("medium");
 var hardBtn = document.getElementById("hard");
 var difficulty = document.getElementById("difficulty");
 var c = canvas.getContext("2d");
+var word;
 
 easyBtn.addEventListener("click", function(clickEvent) {
     setupCanvas();
@@ -12,7 +13,6 @@ easyBtn.addEventListener("click", function(clickEvent) {
     canvas.className = "";;
     difficulty.innerText = "You've selected EASY";
     console.log(word);
-
 })
 
 mediumBtn.addEventListener("click", function(clickEvent) {
@@ -41,10 +41,11 @@ function retrieveWord() {
     var wordRequest = new XMLHttpRequest();
     wordRequest.open('GET', "https://hangman-api.lively.software");
     wordRequest.onload = function(wordLoad) {
-        var word = setWord(JSON.parse(wordRequest.responseText));
+        word = JSON.parse(wordRequest.responseText);
+        console.log(word.word);
     };
     wordRequest.send();
-    
+   // return word;
 }
 
 function setupCanvas() {
