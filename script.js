@@ -4,14 +4,20 @@ var mediumBtn = document.getElementById("medium");
 var hardBtn = document.getElementById("hard");
 var difficulty = document.getElementById("difficulty");
 var c = canvas.getContext("2d");
-var letterBank = document.getElementById("letterbank");
+var letterBank = document.getElementById("word");
 var input = document.getElementById("input");
 var userGuess = document.getElementById("userGuess");
 var guessButton = document.getElementById("submitButton");
+let drawStage = 1;
 let game;
 let gameWord;
 let letters;
 let spaces;
+let alphabet = [
+    "A","B","C", "D", "E","F","G","H",
+    "I","J","K","L","M","N","O","P","Q",
+    "R","S", "T","U","V","W","X","Y","Z"
+]
 
 easyBtn.addEventListener("click", function(clickEvent) {
     canvas.className = "";;
@@ -23,31 +29,108 @@ easyBtn.addEventListener("click", function(clickEvent) {
 })
 
 mediumBtn.addEventListener("click", function(clickEvent) {
-    setupCanvas(); 
-    hideButtons();
     canvas.className = "";
     difficulty.innerText = "You've selected MEDIUM";
+    game = new Hangman();
+    game.setupCanvas();
+    game.play();
+    hideButtons();
 })
 
 hardBtn.addEventListener("click", function(clickEvent) {   
-    setupCanvas(); 
-    hideButtons();
     canvas.className = "";
     difficulty.innerText = "You've selected HARD";
+    game = new Hangman();
+    game.setupCanvas();
+    game.play();
+    hideButtons();
 })
 
 input.addEventListener("submit", function(submitEvent){
     submitEvent.preventDefault();
-    let guess = game.checkGuess();
-    for (var i = 0; i < letters.length; i++) {
-        if (letters[i] == guess) {
-            alert("Your guess was CORRECT!");
-            spaces[i] = guess.toString.toUpperCase();
+    let guess = game.checkGuess().toString().toUpperCase();
+    if (alphabet.includes(guess)) {
+        if (letters.includes(guess)) {
+            for (var i = 0; i < alphabet.length; i++) {
+                if (alphabet[i] == guess) {
+                    alphabet.splice(i, 1);
+                }
+            }
+            for (var x = 0; x < letters.length; x++) {
+                if (letters[x] == guess) {
+                    spaces[x] = guess;
+                    letterBank.innerHTML = spaces.join(" ");
+                }
+            }      
+
+            if (JSON.stringify(spaces) == JSON.stringify(letters)) {
+                if (confirm("Game over! You have won! Would you like the play again?")) {
+                    game = new Hangman();
+                    game.setupCanvas();
+                    game.play();
+                    gameWord = "";
+                    letterBank.innerHTML = " ";
+                    drawStage = 1;
+                    alphabet = [
+                        "A","B","C", "D", "E","F","G","H",
+                        "I","J","K","L","M","N","O","P","Q",
+                        "R","S", "T","U","V","W","X","Y","Z"
+                    ]
+                    return;
+                } else {
+                    alert("Thanks for playing game is over!")
+                }
+            }
+            
         } else {
-            alert("Your guess was INCORRECT!");
+
+            if (drawStage == 1) {
+                game.drawHead();
+            } 
+            if (drawStage == 2) {
+                game.drawBody();
+            } 
+            if (drawStage == 3) {
+                game.drawLeftArm();
+            } 
+            if (drawStage == 4) {
+                game.drawRightArm();
+            } 
+            if (drawStage == 5) {
+                game.drawRightLeg();
+            } 
+            if (drawStage == 6) {
+                game.drawLeftLeg();
+                if (confirm("You lost! The word was " + gameWord + ". Would you like to play again?")) {
+                    game = new Hangman();
+                    game.setupCanvas();
+                    game.play();
+                    gameWord = "";
+                    letterBank.innerHTML = " ";
+                    drawStage = 1;
+                    alphabet = [
+                        "A","B","C", "D", "E","F","G","H",
+                        "I","J","K","L","M","N","O","P","Q",
+                        "R","S", "T","U","V","W","X","Y","Z"
+                    ]
+                    return;
+                } else {
+                    alert("Thanks for playing game is over!");
+                }
+            } 
+            
+
+            drawStage++;
+
+            for (var i = 0; i < alphabet.length; i++) {
+                if (alphabet[i] == guess) {
+                    alphabet.splice(i, 1);
+                }
+            }
         }
+    } else {
+        alert("You have already guessed that letter, try again!");
     }
-    
 })
 
 function hideButtons() {
@@ -66,7 +149,7 @@ class Hangman {
         letters = [];
         spaces = [];
         for (var i = 0; i < gameWord.toString().length; i++) {
-                letters[i] = gameWord.charAt(i);
+                letters[i] = gameWord.charAt(i).toString().toUpperCase();
                 spaces[i] =  "_    ";
                 letterBank.appendChild(document.createTextNode(spaces[i]));
         }
@@ -90,11 +173,6 @@ class Hangman {
         });
     }
     checkGuess() {
-        var alphabet = [
-            "A","B","C", "D", "E","F","G","H",
-            "I","J","K","L","M","N","O","P","Q",
-            "R","S", "T","U","V","W","X","Y","Z"
-        ]
         var guess = userGuess.value;
         return guess;
     }
