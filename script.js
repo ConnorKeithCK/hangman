@@ -8,12 +8,17 @@ var letterBank = document.getElementById("letterbank");
 var input = document.getElementById("input");
 var userGuess = document.getElementById("userGuess");
 var guessButton = document.getElementById("submitButton");
-let word;
+let game;
+let gameWord;
+let letters;
+let spaces;
 
 easyBtn.addEventListener("click", function(clickEvent) {
     canvas.className = "";;
     difficulty.innerText = "You've selected EASY";
-    // setupCanvas
+    game = new Hangman();
+    game.setupCanvas();
+    game.play();
     hideButtons();
 })
 
@@ -33,6 +38,16 @@ hardBtn.addEventListener("click", function(clickEvent) {
 
 input.addEventListener("submit", function(submitEvent){
     submitEvent.preventDefault();
+    let guess = game.checkGuess();
+    for (var i = 0; i < letters.length; i++) {
+        if (letters[i] == guess) {
+            alert("Your guess was CORRECT!");
+            spaces[i] = guess.toString.toUpperCase();
+        } else {
+            alert("Your guess was INCORRECT!");
+        }
+    }
+    
 })
 
 function hideButtons() {
@@ -42,30 +57,46 @@ function hideButtons() {
 }
 
 class Hangman {
-    constructor() {
-    }
+    constructor() {}
 
-    play() {
+    async play() {
+        gameWord = await this.retrieveWord();
+        console.log(gameWord);
         input.className = "";
-        var letters = [];
-        var spaces = [];
-        for (var i = 0; i < this.gameWord.toString().length; i++) {
-                letters[i] = this.gameWord.charAt(i);
+        letters = [];
+        spaces = [];
+        for (var i = 0; i < gameWord.toString().length; i++) {
+                letters[i] = gameWord.charAt(i);
                 spaces[i] =  "_    ";
-                console.log(letters[i]);
                 letterBank.appendChild(document.createTextNode(spaces[i]));
         }
     }
 
+    retrieveWord() {
+        return new Promise(function(resolve, reject) {
+            const request = new XMLHttpRequest();
+            request.onreadystatechange = function() {
+                if (request.readyState !== request.DONE) {
+                    return;
+                }
+
+                const response = JSON.parse(request.responseText);
+
+                resolve(response.word);
+            };
+
+            request.open("GET", "https://hangman-api.lively.software");
+            request.send();
+        });
+    }
     checkGuess() {
         var alphabet = [
             "A","B","C", "D", "E","F","G","H",
             "I","J","K","L","M","N","O","P","Q",
             "R","S", "T","U","V","W","X","Y","Z"
         ]
-        var guess = document.getElementById()
-        console.log(guess);
-
+        var guess = userGuess.value;
+        return guess;
     }
 
     drawRightLeg() {
